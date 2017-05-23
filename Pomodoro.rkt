@@ -4,40 +4,59 @@
 (require 2htdp/image)
 (require 2htdp/universe)
 
-;; My world program  (make this more specific)
+;; A Pomodoro Clock with two modes, 25 minutes and 5 minutes
 
 ;; =================
 ;; Constants:
+(define WIDTH 400)
+(define HEIGHT 400)
+(define MTS (empty-scene WIDTH HEIGHT))
+(define BLANK (square 0 "solid" "white"))
+(define DEFAULT-FONT-SIZE 48)
+(define MESSAGE-FONT-SIZE 30)
+(define MESSAGE "Trust the tomato.")
+(define FOCUS-FONT-COLOR "red")
+(define BREAK-FONT-COLOR "blue")
+(define FOCUS-START-TIME 25)
+(define BREAK-START-TIME 5)
+(define TIME-X-POS (/ WIDTH 2))
+(define TIME-Y-POS 50)
+(define MESSAGE-X-POS (/ WIDTH 2))
+(define MESSAGE-Y-POS 300)
 
 
 ;; =================
 ;; Data definitions:
 
-;; WS is ... (give WS a better name)
+;; Clock is ... (give Clock a better name)
 
 
 
 ;; =================
 ;; Functions:
 
-;; WS -> WS
+;; Clock -> Clock
 ;; start the world with ...
 ;; 
-(define (main ws)
-  (big-bang ws                   ; WS
-            (on-tick   tock)     ; WS -> WS
-            (to-draw   render)   ; WS -> Image
-            (stop-when ...)      ; WS -> Boolean
-            (on-mouse  ...)      ; WS Integer Integer MouseEvent -> WS
-            (on-key    ...)))    ; WS KeyEvent -> WS
+(define (main c)
+  (big-bang c                   ; Clock
+            (on-tick   next-clock)     ; Clock -> Clock
+            (to-draw   render)   ; Clock -> Image
+            (on-key    handle-key)))    ; Clock KeyEvent -> Clock
 
-;; WS -> WS
+;; Clock -> Clock
 ;; produce the next ...
 ;; !!!
-(define (tock ws) ...)
+(define (next-clock c ) ...)
 
 
-;; WS -> Image
+;; Clock -> Image
 ;; render ... 
 ;; !!!
-(define (render ws) ...)
+(define (render c) ...)
+
+;; Clock KeyEvent -> Clock
+;; changes clock mode between Focus and Break when space bar is pressed
+;;!!!
+(define (handle-key c ke)c)
+
