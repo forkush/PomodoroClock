@@ -28,32 +28,34 @@
 ;; =================
 ;; Data definitions:
 
-;; Clock is ... (give Clock a better name)
-
-
+(define-struct clock (min sec mode))
+;; Clock is (make-clock Natural Natural Boolean)
+;; interp. a countdown clock with min and seconds remaining, in the Focus or Break mode
+(define C1 (make-clock 25 0 false))
+(define C2 (make-clock 4 30 true))
 
 ;; =================
 ;; Functions:
 
 ;; Clock -> Clock
-;; start the world with ...
+;; start the world with (main (make-clock 25 0 true))
 ;; 
 (define (main c)
-  (big-bang c                   ; Clock
-            (on-tick   next-clock)     ; Clock -> Clock
-            (to-draw   render)   ; Clock -> Image
+  (big-bang c                           ; Clock
+            (on-tick   next-clock)      ; Clock -> Clock
+            (to-draw   render)          ; Clock -> Image
             (on-key    handle-key)))    ; Clock KeyEvent -> Clock
 
 ;; Clock -> Clock
-;; produce the next ...
+;; produce the next lowest clock time by one second
 ;; !!!
-(define (next-clock c ) ...)
+(define (next-clock c ) c)
 
 
 ;; Clock -> Image
-;; render ... 
+;; render the appropriate clock time 
 ;; !!!
-(define (render c) ...)
+(define (render c) MTS)
 
 ;; Clock KeyEvent -> Clock
 ;; changes clock mode between Focus and Break when space bar is pressed
