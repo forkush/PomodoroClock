@@ -80,11 +80,14 @@
 
 ;; Clock -> Image
 ;; render the appropriate clock time 
-;; !!!
-(define (render c) MTS)
-
-;; Clock KeyEvent -> Clock
-;; changes clock mode between Focus and Break when space bar is pressed
-;;!!!
-(define (handle-key c ke)c)
-
+(check-expect (render (make-clock 24 30)) (place-image
+                                           (text  (string-append  (number->string (clock-min p) ":" (clock-sec p) DEFAULT-FONT-SIZE ######)))
+                                           
+                                           (define (render c) MTS)
+                                           
+                                           ;; Clock KeyEvent -> Clock
+                                           ;; changes clock mode between Focus and Break when space bar is pressed
+                                           ;;!!!
+                                           (define (handle-key c ke)c)
+                                           
+                                           
