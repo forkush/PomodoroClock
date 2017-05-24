@@ -21,6 +21,8 @@
 (define TIME-Y-POS 150)
 (define TITLE-X-POS (/ WIDTH 2))
 (define TITLE-Y-POS 50)
+(define FOCUS-TEXT "Focus")
+(define BREAK-TEXT "Break")
 
 ;; =================
 ;; Data definitions:
@@ -77,16 +79,16 @@
 ;; Clock -> Image
 ;; render the appropriate clock time, title, and color
 (check-expect (render (make-clock 24 30 true))
-              (place-image (text "Focus" FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
+              (place-image (text FOCUS-TEXT FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
                            (place-image (text  (string-append  (number->string 24) ":" (number->string 30)) FONT-SIZE FOCUS-FONT-COLOR)
                                         TIME-X-POS TIME-Y-POS MTS)))
 (check-expect (render (make-clock 24 3 true))
-              (place-image (text "Focus" FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
+              (place-image (text FOCUS-TEXT FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
                            (place-image (text  (string-append  (number->string 24) ":" "0" (number->string 3)) FONT-SIZE FOCUS-FONT-COLOR)
                                         TIME-X-POS TIME-Y-POS MTS)))
 
 (check-expect (render (make-clock 4 30 false))
-              (place-image (text "Break" FONT-SIZE BREAK-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
+              (place-image (text BREAK-TEXT FONT-SIZE BREAK-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
                            (place-image (text  (string-append  (number->string 4) ":" (number->string 30)) FONT-SIZE BREAK-FONT-COLOR)
                                         TIME-X-POS TIME-Y-POS MTS)))
 ;(define (render c) MTS)     ;stub
@@ -100,14 +102,14 @@
 
 ;; Clock -> String
 ;; produce "Focus" if true, "Break" if false
-(check-expect (focus-text? (make-clock 1 1 true))  "Focus")
-(check-expect (focus-text? (make-clock 1 1 false)) "Break")
+(check-expect (focus-text? (make-clock 1 1 true))  FOCUS-TEXT)
+(check-expect (focus-text? (make-clock 1 1 false)) BREAK-TEXT)
 ;(define (focus-text? c) "")    ;stub
 
 (define (focus-text? c)
   (if (clock-mode c)
-      "Focus"
-      "Break"))
+      FOCUS-TEXT
+      BREAK-TEXT))
 
 ;; Clock -> String
 ;; produce "red" if true, "blue" if false
@@ -142,4 +144,3 @@
 (define (handle-key c ke)
   (cond [(key=? ke " ") (make-clock (focus-mode? c) 0 (not (clock-mode c)))]
         [else c]))
-
