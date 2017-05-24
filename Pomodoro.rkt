@@ -33,6 +33,11 @@
 ;; interp. a countdown clock with min and seconds remaining, in the Focus or Break mode
 (define C1 (make-clock 25 0 false))
 (define C2 (make-clock 4 30 true))
+#;
+(define (fn-for-clock c)
+  (... (clock-min c)        ;Natural
+       (clock-sec c)        ;Natural
+       (clock-mode c)))     ;Boolean    
 
 ;; =================
 ;; Functions:
@@ -47,9 +52,30 @@
             (on-key    handle-key)))    ; Clock KeyEvent -> Clock
 
 ;; Clock -> Clock
-;; produce the next lowest clock time by one second
+;; produce the next lowest clock time by one second and change mode after it reaches 0.
+(check-expect (next-clock (make-clock 25  0  true)) (make-clock 24 59 true))
+(check-expect (next-clock (make-clock 24 59  true)) (make-clock 24 58 true))
+(check-expect (next-clock (make-clock  4 30 false)) (make-clock  4 29 false))
+(check-expect (next-clock (make-clock  0  0  true)) (make-clock  5  0 false))  ;Focus clock reaches 0, converts to Break clock
+(check-expect (next-clock (make-clock  0  0 false)) (make-clock 25  0 true))   ;Break clock reaches 0, converts to Focus clock
+;(define (next-clock c ) c)    ;stub
+
+(define (next-clock c)
+  (cond [(and (> (clock-min c) 0) (> (clock-sec c) 0)) (make-clock (clock-min c) (- (clock-sec c) 1) (clock-mode c))]
+        [(and (> (clock-min c) 0) (= (clock-sec c) 0)) (make-clock (- (clock-min c) 1) 59 (clock-mode c))]
+        [else
+         (make-clock (focus-mode? c) 0 (not (clock-mode c)))]))
+
+;; Clock -> Natural
+;; produces 5 if mode is true, 25 if mode is false
 ;; !!!
-(define (next-clock c ) c)
+;(define (focus-mode? c) 0)     ;stub
+
+(define (focus-mode? c)
+  (if (clock-mode c)
+      5
+      25))
+
 
 
 ;; Clock -> Image
