@@ -17,19 +17,20 @@
 (define BREAK-FONT-COLOR "blue")
 (define FOCUS-START-MINUTES 25)
 (define BREAK-START-MINUTES 5)
+(define FOCUS-TITLE "Focus")
+(define BREAK-TITLE "Break")
 (define TIME-X-POS (/ WIDTH 2))
 (define TIME-Y-POS (* HEIGHT .7))
 (define TITLE-X-POS (/ WIDTH 2))
 (define TITLE-Y-POS (* HEIGHT .3))
-(define FOCUS-TEXT "Focus")
-(define BREAK-TEXT "Break")
+
 
 ;; =================
 ;; Data definitions:
 
 (define-struct clock (min sec mode))
 ;; Clock is (make-clock Natural Natural Boolean)
-;; interp. the minutes and seconds remaining on a countdown clock, true mode means it is in 25 min "Focus" mode, false mode means it is in 5 min "Break" mode
+;; interp. the minutes and seconds remaining on a countdown clock, true mode means it is in 25 min "Focus" mode, otherwise it is in 5 min "Break" mode
 
 (define C1 (make-clock 25 0 true))
 (define C2 (make-clock 4 30 false))
@@ -72,7 +73,7 @@
         [else                                          (make-clock (set-start-time c) 0 (not (clock-mode c)))]))
 
 ;; Clock -> Natural
-;; produces BREAK-START-MINUTES if mode is true, FOCUS-START-MINUTES if mode is false
+;; produces BREAK-START-MINUTES if clock mode is true, otherwise produces FOCUS-START-MINUTES 
 (check-expect (set-start-time (make-clock 10 10 true))  BREAK-START-MINUTES)
 (check-expect (set-start-time (make-clock 10 10 false)) FOCUS-START-MINUTES)
 
@@ -87,16 +88,16 @@
 ;; Clock -> Image
 ;; render the appropriate clock time, title, and color
 (check-expect (render (make-clock 24 30 true))
-              (place-image (text FOCUS-TEXT FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
+              (place-image (text FOCUS-TITLE FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
                            (place-image (text  (string-append  (number->string 24) ":" (number->string 30)) FONT-SIZE FOCUS-FONT-COLOR)
                                         TIME-X-POS TIME-Y-POS MTS)))
 (check-expect (render (make-clock 24 3 true))
-              (place-image (text FOCUS-TEXT FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
+              (place-image (text FOCUS-TITLE FONT-SIZE FOCUS-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
                            (place-image (text  (string-append  (number->string 24) ":" "0" (number->string 3)) FONT-SIZE FOCUS-FONT-COLOR)
                                         TIME-X-POS TIME-Y-POS MTS)))
 
 (check-expect (render (make-clock 4 30 false))
-              (place-image (text BREAK-TEXT FONT-SIZE BREAK-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
+              (place-image (text BREAK-TITLE FONT-SIZE BREAK-FONT-COLOR) TITLE-X-POS TITLE-Y-POS
                            (place-image (text  (string-append  (number->string 4) ":" (number->string 30)) FONT-SIZE BREAK-FONT-COLOR)
                                         TIME-X-POS TIME-Y-POS MTS)))
 
@@ -124,24 +125,24 @@
     TIME-X-POS TIME-Y-POS MTS))
 
 ;; Clock -> String
-;; produce FOCUS-TEXT if true, BREAK-TEXT if false
-(check-expect (set-title (make-clock 1 1 true))  FOCUS-TEXT)
-(check-expect (set-title (make-clock 1 1 false)) BREAK-TEXT)
+;; produces FOCUS-TITLE if clock mode is true, otherwise produces BREAK-TITLE
+(check-expect (set-title (make-clock 1 1 true))  FOCUS-TITLE)
+(check-expect (set-title (make-clock 1 1 false)) BREAK-TITLE)
 
 ;(define (set-title c) "")    ;stub
 ; Template from Clock
 
 (define (set-title c)
   (if (clock-mode c)
-      FOCUS-TEXT
-      BREAK-TEXT))
+      FOCUS-TITLE
+      BREAK-TITLE))
 
 ;; Clock -> String
-;; produce FOCUS-FONT-COLOR if true, BREAK-FONT-COLOR if false
+;; produces FOCUS-FONT-COLOR if clock mode is true, otherwise produces BREAK-FONT-COLOR
 (check-expect (set-font-color (make-clock 1 1 true))  FOCUS-FONT-COLOR)
 (check-expect (set-font-color (make-clock 1 1 false)) BREAK-FONT-COLOR)
 
-;(define (set-font-color c) "green")    ;stub
+;(define (set-font-color c) "green")    ;stub 
 ; Template from Clock
 
 (define (set-font-color c)
@@ -150,7 +151,7 @@
       BREAK-FONT-COLOR))
 
 ;; Clock -> String
-;; produce "0" if true, "" if false
+;; produces the string "0" if clock mode is true, otherwise produces ""
 (check-expect (zero-padding (make-clock 1 10 true)) "")
 (check-expect (zero-padding (make-clock 1 9 true)) "0")
 
