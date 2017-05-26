@@ -106,23 +106,36 @@
 
 (define (render c)
   (place-image
-   (text (set-title c) FONT-SIZE (set-font-color c)) TITLE-X-POS TITLE-Y-POS
-   (render-clock c)))
+   (render-title c) TITLE-X-POS TITLE-Y-POS
+   (place-image
+    (render-clock c) TIME-X-POS TIME-Y-POS MTS)))
 
 ;; Clock -> Image
-;; render the clock with the appropriate time and color
-(check-expect (render-clock (make-clock 24 30 true)) (place-image (text  (string-append  (number->string 24) ":" (number->string 30)) FONT-SIZE FOCUS-FONT-COLOR)
-                                        TIME-X-POS TIME-Y-POS MTS))
-(check-expect (render-clock (make-clock 4 30 false)) (place-image (text  (string-append  (number->string 4) ":" (number->string 30)) FONT-SIZE BREAK-FONT-COLOR)
-                                        TIME-X-POS TIME-Y-POS MTS))
-
+;; render the minutes and seconds in the appropriate color
+(check-expect (render-clock (make-clock 24 30 true))
+              (text  (string-append  (number->string 24) ":" (number->string 30)) FONT-SIZE FOCUS-FONT-COLOR))
+(check-expect (render-clock (make-clock 4 30 false))
+              (text  (string-append  (number->string 4) ":" (number->string 30)) FONT-SIZE BREAK-FONT-COLOR))              
+              
 ;(define (render-clock c) MTS)     ;stub
 ; Template from Clock
 
 (define (render-clock c)
-  (place-image
-    (text  (string-append  (number->string (clock-min c)) ":" (zero-padding c) (number->string (clock-sec c))) FONT-SIZE (set-font-color c))
-    TIME-X-POS TIME-Y-POS MTS))
+  (text  (string-append  (number->string (clock-min c)) ":" (zero-padding c) (number->string (clock-sec c))) FONT-SIZE (set-font-color c)))
+  
+
+;; Clock -> Image
+;; render the appropriate title in the appropriate color
+(check-expect (render-title (make-clock 24 30 true))
+              (text FOCUS-TITLE FONT-SIZE FOCUS-FONT-COLOR))
+(check-expect (render-title (make-clock 24 30 false))
+              (text BREAK-TITLE FONT-SIZE BREAK-FONT-COLOR))
+              
+;(define (render-title c) MTS)   stub
+; Template from Clock
+
+(define (render-title c)
+  (text (set-title c) FONT-SIZE (set-font-color c)))
 
 ;; Clock -> String
 ;; produces FOCUS-TITLE if clock mode is true, otherwise produces BREAK-TITLE
